@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="manifest" href="manifest.json">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Tracker App</title>
+  <style>
+  *{
+    margin:0;
+  }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      display: flex;
+      flex-direction:column;
+    
+      align-items: center;
+      min-height: 100vh;
+    
+    }
+  .header h2{
+    text-align:center;
+    padding:25px;
+  }
+  .header{
+    background:darkgreen;
+    margin:0;
+    display:flex;
+    color:white;
+    align-items:center;
+    justify-content:center;
+  }
+    .container {
+      background: white;
+      padding: 20px 25px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      width: ;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 6px 0;
+      border: 1px solid #ccc;
+      border-radius: 15px;
+    }
+    button {
+      background: darkgreen;
+      color: white;
+      border: none;
+      font-weight:600;
+      padding: 10px;
+      width: 100%;
+      border-radius: 15px;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+    button:hover { background: #0056b3; }
+    ol {
+      margin-top: 20px;
+      padding-left: 20px;
+    }
+    li {
+      background: #f1f3f5;
+      padding: 8px;
+      border-radius: 5px;
+      margin-bottom: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .delete-btn {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 5px 8px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .total {
+      text-align: right;
+      font-weight: bold;
+      font-size: 16px;
+      margin-top: 10px;
+      color: #333;
+      border-top: 2px solid #ddd;
+      padding-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header"><h2>Fatan Alheri Spare Parts
+    2025 
+  </h2></div>
+  <div class="container">
+    <h2>Product Entry</h2>
+    <input type="text" id="productName" placeholder="Enter product name">
+    <input type="number" id="productPrice" placeholder="Enter product price">
+    <input type="number" id="productQuantity" placeholder="Enter quantity">
+    <button id="saveBtn">Save Product</button>
+    <button onclick="window.open('products.html')">View Product List</button>
+    
+    <ol id="productList"></ol>
+    <div class="total" id="grandTotal">Total: ₦0</div>
+  </div>
+  <script>
+  if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js');
+}
+  </script>
+
+  <script>
+    const nameInput = document.getElementById('productName');
+    const priceInput = document.getElementById('productPrice');
+    const quantityInput = document.getElementById('productQuantity');
+    const saveBtn = document.getElementById('saveBtn');
+    const productList = document.getElementById('productList');
+    const grandTotal = document.getElementById('grandTotal');
+
+    document.addEventListener('DOMContentLoaded', loadProducts);
+
+    saveBtn.addEventListener('click', () => {
+      const name = nameInput.value.trim();
+      const price = parseFloat(priceInput.value.trim());
+      const quantity = parseInt(quantityInput.value.trim());
+
+      if (name === '' || isNaN(price) || isNaN(quantity)) {
+        alert('Please enter valid name, price, and quantity.');
+        return;
+      }
+
+      const product = { name, price, quantity };
+      const products = JSON.parse(localStorage.getItem('products')) || [];
+      products.push(product);
+      localStorage.setItem('products', JSON.stringify(products));
+
+      displayProducts(products);
+
+      nameInput.value = '';
+      priceInput.value = '';
+      quantityInput.value = '';
+    });
+
+    function loadProducts() {
+      const products = JSON.parse(localStorage.getItem('products')) || [];
+      displayProducts(products);
+    }
+
+    function displayProducts(products) {
+      productList.innerHTML = '';
+      let totalSum = 0;
+
+      products.forEach((p, index) => {
+        const total = p.price * p.quantity;
+        totalSum += total;
+
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <span>${index + 1}. ${p.name} - ₦${p.price} × ${p.quantity} = <b>₦${total}</b></span>
+          <button class="delete-btn" onclick="deleteProduct(${index})">Delete</button>
+        `;
+        productList.appendChild(li);
+      });
+
+      grandTotal.textContent = `Total: ₦${totalSum.toLocaleString()}`;
+    }
+
+    function deleteProduct(index) {
+      const products = JSON.parse(localStorage.getItem('products')) || [];
+      products.splice(index, 1);
+      localStorage.setItem('products', JSON.stringify(products));
+      displayProducts(products);
+    }
+  </script>
+</body>
+</html>
