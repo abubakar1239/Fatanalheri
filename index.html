@@ -4,18 +4,16 @@
   <link rel="manifest" href="manifest.json">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fatan Alheri</title>
+  <title>Product Tracker App</title>
   <style>
   *{
     margin:0;
   }
     body {
       font-family: Arial, sans-serif;
-      background:linear-gradient(to bottom,darkgreen,white,darkgreen);
+      background: linear-gradient(to bottom,darkgreen,white,darkgreen);
       display: flex;
       flex-direction:column;
-    
-      align-items: center;
       min-height: 100vh;
     
     }
@@ -24,7 +22,7 @@
     padding:25px;
   }
   .header{
-    background:darkgreen;
+    background: linear-gradient(to right,darkgreen,green);
     margin:0;
     display:flex;
     color:white;
@@ -32,14 +30,18 @@
     justify-content:center;
   }
     .container {
+        display: flex;
+      flex-direction:column;
+    justify-content:center;
+      align-items: center;
       background: white;
       padding: 20px 25px;
       border-radius: 10px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      width: ;
+  
     }
     input {
-      width: 100%;
+      width: 250px;
       padding: 10px;
       margin: 6px 0;
       border: 1px solid #ccc;
@@ -51,11 +53,11 @@
       border: none;
       font-weight:600;
       padding: 10px;
-      width: 100%;
+      width: 300px;
       border-radius: 15px;
       cursor: pointer;
       margin-top: 5px;
-      width:120px;
+      width:200px;
     }
     
     ol {
@@ -68,9 +70,10 @@
       border-radius: 5px;
       margin-bottom: 5px;
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
       flex-wrap: wrap;
+      text-align:center;
     }
     .delete-btn {
       background: #dc3545;
@@ -80,7 +83,7 @@
       border-radius: 14px;
       cursor: pointer;
       font-size: 12px;
-      width:120px;
+      width:200px;
     }
     .total {
       text-align: right;
@@ -91,19 +94,27 @@
       border-top: 2px solid #ddd;
       padding-top: 10px;
     }
+ li .btn-container{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction:column;
+      
+    }
+  
   </style>
 </head>
 <body>
   <div class="header"><h2>Fatan Alheri Spare Parts
-    lissafin shekara
+    2025 
   </h2></div>
   <div class="container">
-    <h2>product Entry</h2>
+    <h2>Product Entry</h2>
     <input type="text" id="productName" placeholder="Enter product name">
     <input type="number" id="productPrice" placeholder="Enter product price">
     <input type="number" id="productQuantity" placeholder="Enter quantity">
     <button id="saveBtn">Save Product</button>
-    <button onclick="window.open('products.html')">View Product List</button>
+    <button onclick="window.open('products.html')">View Products</button>
     
     <ol id="productList"></ol>
     <div class="total" id="grandTotal">Total: ₦0</div>
@@ -160,10 +171,11 @@
         totalSum += total;
 
         const li = document.createElement('li');
-        li.innerHTML = `
-          <span>${index + 1}. ${p.name} - ₦${p.price} × ${p.quantity} = <b>₦${total}</b></span>
-          <button class="delete-btn" onclick="deleteProduct(${index})">Delete</button>
+        li.innerHTML = `<div class="btn-container">
+          <div><span>${index + 1}. ${p.name} - ₦${p.price} × ${p.quantity} = <b>₦${total}</b></span></div>
+          <div><button class="delete-btn" onclick="deleteProduct(${index})">Delete</button></div></div>
         `;
+        
         productList.appendChild(li);
       });
 
